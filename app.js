@@ -10,7 +10,8 @@ class TicTacToe {
             currentPlayer: 'X',
             isComputerMode: true,
             scores: { X: 0, O: 0 },
-            gameActive: true
+            gameActive: true,
+            difficulty: 'hard' // Default difficulty
         };
 
         this.winPatterns = [
@@ -40,6 +41,17 @@ class TicTacToe {
         this.elements.modeToggle.addEventListener('click', () => this.toggleGameMode());
         this.elements.resetBtn.addEventListener('click', () => this.resetGame());
         this.elements.newGameBtn.addEventListener('click', () => this.startNewGame());
+
+        // Add difficulty button event listeners
+        document.getElementById('easy-btn').addEventListener('click', () => this.setDifficulty('easy'));
+        document.getElementById('medium-btn').addEventListener('click', () => this.setDifficulty('medium'));
+        document.getElementById('hard-btn').addEventListener('click', () => this.setDifficulty('hard'));
+
+        // Add play again button event listener
+        document.getElementById('play-again-btn').addEventListener('click', () => {
+            this.elements.modal.classList.add('hide');
+            this.resetGame();
+        });
     }
 
     handleCellClick(cell) {
@@ -74,7 +86,18 @@ class TicTacToe {
 
     makeComputerMove() {
         setTimeout(() => {
-            const index = this.getBestMove();
+            let index;
+            switch(this.gameState.difficulty) {
+                case 'easy':
+                    index = this.getEasyMove();
+                    break;
+                case 'medium':
+                    index = this.getMediumMove();
+                    break;
+                case 'hard':
+                    index = this.getBestMove();
+                    break;
+            }
             if (index !== -1) {
                 this.makeMove(index);
             }
@@ -179,7 +202,7 @@ class TicTacToe {
         this.elements.scoreDisplay.textContent =
             `Score - X: ${this.gameState.scores.X} O: ${this.gameState.scores.O}`;
         this.elements.turnDisplay.textContent =
-            `Current Turn: ${this.gameState.currentPlayer}`;
+            `Current Turn: ${this.gameState.currentPlayer} (Difficulty: ${this.gameState.difficulty})`;
     }
 
     toggleGameMode() {
@@ -203,6 +226,78 @@ class TicTacToe {
 
     startNewGame() {
         this.resetGame();
+    }
+
+    getEasyMove() {
+        // Random moves with occasional strategic plays
+        const emptyIndices = this.gameState.board
+            .map((val, idx) => val === '' ? idx : null)
+            .filter(idx => idx !== null);
+
+        // 30% chance to make a strategic move
+        if (Math.random() < 0.3) {
+            // Try to win if possible
+            for (let i = 0; i < emptyIndices.length; i++) {
+                const index = emptyIndices[i];
+                const newBoard = this.gameState.board.slice();
+                newBoard[index] = 'O';
+                if (this.checkWinner(newBoard, 'O')) {
+                    return index;
+                }
+            }
+        }
+
+        // Otherwise make a random move
+        return emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+    }
+
+    getMediumMove() {
+        const emptyIndices = this.gameState.board
+            .map((val, idx) => val === '' ? idx : null)
+            .filter(idx => idx !== null);
+
+        // 70% chance to make a strategic move
+        if (Math.random() < 0.7) {
+            // Try to win if possible
+            for (let i = 0; i < emptyIndices.length; i++) {
+                const index = emptyIndices[i];
+                const newBoard = this.gameState.board.slice();
+                newBoard[index] = 'O';
+                if (this.checkWinner(newBoard, 'O')) {
+                    return index;
+                }
+            }
+
+            // Block player's winning move
+            for (let i = 0; i < emptyIndices.length; i++) {
+                const index = emptyIndices[i];
+                const newBoard = this.gameState.board.slice();
+                newBoard[index] = 'X';
+                if (this.checkWinner(newBoard, 'X')) {
+                    return index;
+                }
+            }
+
+            // Take center if available
+            if (this.gameState.board[4] === '') {
+                return 4;
+            }
+
+            // Take corners if available
+            const corners = [0, 2, 6, 8];
+            const availableCorners = corners.filter(i => this.gameState.board[i] === '');
+            if (availableCorners.length > 0) {
+                return availableCorners[Math.floor(Math.random() * availableCorners.length)];
+            }
+        }
+
+        // Otherwise make a random move
+        return emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+    }
+
+    setDifficulty(difficulty) {
+        this.gameState.difficulty = difficulty;
+        this.updateDisplay();
     }
 }
 
