@@ -12,9 +12,16 @@
         <h1>Tic Tac Toe</h1>
         <div class="controls">
           <button id="mode-toggle">Switch to Player vs Player</button>
-          <div id="score-display"></div>
-          <div id="turn-display"></div>
+          <div class="difficulty-controls">
+            <button id="easy-btn" class="difficulty-btn">Easy</button>
+            <button id="medium-btn" class="difficulty-btn">Medium</button>
+            <button id="hard-btn" class="difficulty-btn">Hard</button>
+          </div>
+          <button id="reset-btn">Reset Game</button>
+          <button id="new-game-btn">New Game</button>
         </div>
+        <div id="score-display">Score - X: 0 O: 0</div>
+        <div id="turn-display">Current Turn: X (Difficulty: hard)</div>
       </div>
 
       <div class="game-board">
@@ -29,14 +36,10 @@
         <button class="cell" data-index="8"></button>
       </div>
 
-      <div class="game-controls">
-        <button id="reset-btn">Reset Game</button>
-      </div>
-
       <div class="modal hide">
         <div class="modal-content">
-          <p id="result-message"></p>
-          <button id="new-game-btn">New Game</button>
+          <div id="result-message"></div>
+          <button id="play-again-btn">Play Again</button>
         </div>
       </div>
     </div>
