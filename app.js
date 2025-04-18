@@ -46,7 +46,7 @@ class TicTacToe {
         const index = cell.dataset.index;
         if (this.isValidMove(index)) {
             this.makeMove(index);
-            
+
             if (this.gameState.isComputerMode && this.gameState.gameActive) {
                 this.makeComputerMove();
             }
@@ -54,7 +54,7 @@ class TicTacToe {
     }
 
     isValidMove(index) {
-        return this.gameState.gameActive && 
+        return this.gameState.gameActive &&
                this.gameState.board[index] === '' &&
                (!this.gameState.isComputerMode || this.gameState.currentPlayer === 'X');
     }
@@ -62,12 +62,12 @@ class TicTacToe {
     makeMove(index) {
         this.gameState.board[index] = this.gameState.currentPlayer;
         this.updateCell(index);
-        
+
         if (this.checkWin()) {
             this.handleWin();
         } else if (this.checkDraw()) {
             this.handleDraw();
-    } else {
+        } else {
             this.switchPlayer();
         }
     }
@@ -82,53 +82,65 @@ class TicTacToe {
     }
 
     getBestMove() {
-        // Try to win
-        const winMove = this.findWinningMove('O');
-        if (winMove !== -1) return winMove;
-
-        // Block player
-        const blockMove = this.findWinningMove('X');
-        if (blockMove !== -1) return blockMove;
-
-        // Take center
-        if (this.gameState.board[4] === '') return 4;
-
-        // Take any available corner
-        const corners = [0, 2, 6, 8];
-        const availableCorners = corners.filter(i => this.gameState.board[i] === '');
-        if (availableCorners.length > 0) {
-            return availableCorners[Math.floor(Math.random() * availableCorners.length)];
-        }
-
-        // Take any available side
-        const sides = [1, 3, 5, 7];
-        const availableSides = sides.filter(i => this.gameState.board[i] === '');
-        if (availableSides.length > 0) {
-            return availableSides[Math.floor(Math.random() * availableSides.length)];
-        }
-
-        return -1;
+        const board = this.gameState.board.slice();
+        const best = this.minimax(board, 'O');
+        return best.index;
     }
 
-    findWinningMove(player) {
-        for (let i = 0; i < this.gameState.board.length; i++) {
-            if (this.gameState.board[i] === '') {
-                this.gameState.board[i] = player;
-                if (this.checkWin()) {
-                    this.gameState.board[i] = '';
-                    return i;
-                }
-                this.gameState.board[i] = '';
-            }
+    minimax(board, player) {
+        const opponent = player === 'O' ? 'X' : 'O';
+        const emptyIndices = board
+            .map((val, idx) => val === '' ? idx : null)
+            .filter(idx => idx !== null);
+
+        if (this.checkWinner(board, 'X')) return { score: -10 };
+        if (this.checkWinner(board, 'O')) return { score: 10 };
+        if (emptyIndices.length === 0) return { score: 0 };
+
+        const moves = [];
+
+        for (let i = 0; i < emptyIndices.length; i++) {
+            const index = emptyIndices[i];
+            const newBoard = board.slice();
+            newBoard[index] = player;
+
+            const result = this.minimax(newBoard, opponent);
+            moves.push({
+                index: index,
+                score: result.score
+            });
         }
-        return -1;
+
+        let bestMove;
+        if (player === 'O') {
+            let bestScore = -Infinity;
+            moves.forEach(move => {
+                if (move.score > bestScore) {
+                    bestScore = move.score;
+                    bestMove = move;
+                }
+            });
+        } else {
+            let bestScore = Infinity;
+            moves.forEach(move => {
+                if (move.score < bestScore) {
+                    bestScore = move.score;
+                    bestMove = move;
+                }
+            });
+        }
+
+        return bestMove;
+    }
+
+    checkWinner(board, player) {
+        return this.winPatterns.some(pattern => {
+            return pattern.every(index => board[index] === player);
+        });
     }
 
     checkWin() {
-        return this.winPatterns.some(pattern => {
-            const line = pattern.map(i => this.gameState.board[i]);
-            return line.every(cell => cell === this.gameState.currentPlayer);
-        });
+        return this.checkWinner(this.gameState.board, this.gameState.currentPlayer);
     }
 
     checkDraw() {
@@ -164,15 +176,15 @@ class TicTacToe {
     }
 
     updateDisplay() {
-        this.elements.scoreDisplay.textContent = 
+        this.elements.scoreDisplay.textContent =
             `Score - X: ${this.gameState.scores.X} O: ${this.gameState.scores.O}`;
-        this.elements.turnDisplay.textContent = 
+        this.elements.turnDisplay.textContent =
             `Current Turn: ${this.gameState.currentPlayer}`;
     }
 
     toggleGameMode() {
         this.gameState.isComputerMode = !this.gameState.isComputerMode;
-        this.elements.modeToggle.textContent = 
+        this.elements.modeToggle.textContent =
             this.gameState.isComputerMode ? 'Switch to Player vs Player' : 'Switch to Player vs Computer';
         this.resetGame();
     }
