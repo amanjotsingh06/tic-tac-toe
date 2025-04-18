@@ -145,3 +145,21 @@ button:hover {
         font-size: 2rem;
     }
 }
+
+.difficulty-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.difficulty-btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.difficulty-btn:hover {
+    background: var(--hover-color);
+}
