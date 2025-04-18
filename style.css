@@ -1,0 +1,147 @@
+/* Modern CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Variables for easy customization */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #ecf0f1;
+    --accent-color: #3498db;
+    --x-color: #e74c3c;
+    --o-color: #2ecc71;
+    --hover-color: #bdc3c7;
+    --border-radius: 10px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrapper {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Game Information Styling */
+.game-info {
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Game Board Styling */
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 0 auto;
+    max-width: 400px;
+}
+
+.cell {
+    aspect-ratio: 1;
+    font-size: 3rem;
+    font-weight: bold;
+    background: var(--secondary-color);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.cell:hover:not(:disabled) {
+    background: var(--hover-color);
+    transform: scale(1.05);
+}
+
+.cell[data-symbol="X"] {
+    color: var(--x-color);
+}
+
+.cell[data-symbol="O"] {
+    color: var(--o-color);
+}
+
+/* Button Styling */
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: var(--primary-color);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+#reset-btn {
+  margin-top: 20px;
+  background-color: #191913;
+}
+#result-message {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.hide {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .game-board {
+        max-width: 300px;
+    }
+
+    .cell {
+        font-size: 2rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}
