@@ -83,13 +83,11 @@ tictactoe/
 Amanjot Singh
 - LinkedIn: [Amanjot Singh](https://www.linkedin.com/in/amanjot-singh-32b56a2ba/)
 - GitHub: [@amanjotsingh06](https://github.com/amanjotsingh06)
-- Twitter: [@Aman_jotsingh](https://x.com/Aman_jotsingh)
 
 📬 Contact
 Got feedback or ideas to improve the game?
 
-📧 Email: amanjotsinghsingh918@gmail.com
-📱 Phone: +91 7982987780
+📧 Email: amanjot.singh06.dev@gmail.com
 
 🧠 Want to Contribute?
 Pull requests are welcome! Feel free to fork the repo and improve the game — whether it’s UI/UX, AI, features, or performance.
